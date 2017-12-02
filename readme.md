@@ -12,6 +12,7 @@ Please do not commit directly into the `Day<n>` folders, but rather make a folde
 ## Running
 
 ### Elixir
+[Get Elixir](http://elixir-lang.github.io/)
 > tests
 ```
 mix test
