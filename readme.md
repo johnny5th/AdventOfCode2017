@@ -12,12 +12,15 @@ Please do not commit directly into the `Day<n>` folders, but rather make a folde
 ## Running
 
 ### Elixir
+> Elixir is a dynamic, functional language built to run on the Erlang VM. It excels at distributed and concurrent programming.
+
 [Get Elixir](http://elixir-lang.github.io/)
-> tests
+
+Tests
 ```
 mix test
 ```
-> Exercises
+Exercises
 ```
 mix deps.get
 mix advent1.run
@@ -25,7 +28,12 @@ mix advent2.run
 ```
 
 ### Typescript
+> Typescript is a compile-to-JS language by Microsoft. It is a superset of Javascript that includes strong static typing.
+> Advent solutions are written using Typescript and run using NodeJS.
+
 [Get Typescript](https://www.typescriptlang.org/)
+
+[Get Node](https://nodejs.org/en/)
 ```
 tsc; node dist/main.js
 ```
