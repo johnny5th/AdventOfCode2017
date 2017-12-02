@@ -22,3 +22,9 @@ mix deps.get
 mix advent1.run
 mix advent2.run
 ```
+
+### Typescript
+[Get Typescript](https://www.typescriptlang.org/)
+```
+tsc; node dist/main.js
+```
