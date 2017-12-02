@@ -1,6 +1,6 @@
 # Tyler Web Dev Advent of Code 2017
 
-[Advent of Code](adventofcode.com)
+[Advent of Code](http://adventofcode.com)
 
 Within this repository you'll find 25 folders for the 25 days of the Advent of Code.
 
