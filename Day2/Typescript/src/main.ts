@@ -39,7 +39,7 @@ function divideUnzippedTuple([numerator, denominators]: [number, number[]]): num
     return denominators.map(denominator => numerator / denominator);
 }
 
-function calculatorWholeNumberDivisor(arr: number[]): number {
+function calculateWholeNumberDivisor(arr: number[]): number {
     const arrUnzipped = arr.map((_, i) => unzipElement(i, arr));
     const divisors = flatMap(divideUnzippedTuple, arrUnzipped);
 
@@ -55,7 +55,7 @@ function partOne(input: number[][]): number {
 }
 
 function partTwo(input: number[][]): number {
-    const wholeDivisors = input.map(calculatorWholeNumberDivisor);
+    const wholeDivisors = input.map(calculateWholeNumberDivisor);
 
     return arrSum(wholeDivisors);
 }
