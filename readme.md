@@ -35,5 +35,8 @@ mix advent2.run
 
 [Get Node](https://nodejs.org/en/)
 ```
-tsc; node dist/main.js
+cd ./DayN/Typescript
+npm install
+tsc
+node dist/main.js
 ```
