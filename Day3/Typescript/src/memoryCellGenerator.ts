@@ -1,8 +1,8 @@
 import { Coordinate, coordinateGenerator } from './coordinateGenerator';
 
-export type MemoryCell = [number, Coordinate];
+type MemoryCell = [number, Coordinate];
 
-export function * memoryCellGenerator(): IterableIterator<MemoryCell> {
+function * memoryCellGenerator(): IterableIterator<MemoryCell> {
     let n = 1;
 
     for (let coord of coordinateGenerator()) {
