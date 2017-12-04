@@ -1,0 +1,18 @@
+{
+  "name": "advent-day4",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^8.0.54",
+    "@types/ramda": "^0.25.6"
+  },
+  "dependencies": {
+    "ramda": "^0.25.0"
+  }
+}
