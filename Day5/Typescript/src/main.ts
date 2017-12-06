@@ -2,18 +2,9 @@ import { readFile as readFileAsync } from 'fs';
 import { promisify } from 'util';
 import { lensIndex, over, add } from 'ramda';
 
-type Thunk<T> = (...args: any[]) => T;
+import { trampoline } from './trampoline';
 
 const readFile = promisify(readFileAsync);
-
-function trampoline<T>(fn: Thunk<T>): Thunk<T> {
-    return function(...args: any[]) {
-        let res = fn.apply(this, arguments);
-        while (res instanceof Function)
-            res = res();
-        return res;
-    }
-}
 
 function jump(jumpList: number[], jumpIndex: number, steps: number) {
     if (jumpIndex > jumpList.length - 1)
