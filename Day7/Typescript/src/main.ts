@@ -1,18 +1,25 @@
 import { readFile as readFileAsync } from 'fs';
-import { promisify } from 'util';
-import { partition, contains, prop, any, equals, concat } from 'ramda';
+import { promisify, inspect } from 'util';
+import { partition, contains, prop, any, equals, concat, add, uniq } from 'ramda';
 
-type Empty = null;
 type ProgramNodeList = ProgramNode[];
+type ProgramNodeTree = Tree<ProgramNode>
+type NodeMap = {
+    [name: string]: ProgramNode
+};
 
-type NodeReferenceList
-    = string[]
-    | Empty;
+interface Tree<T> {
+    value: T,
+    children: Tree<T>[] | null
+};
 
-interface ProgramNode {
+interface ANode {
     name: string,
-    weight: number,
-    supports: NodeReferenceList
+    weight: number
+};
+
+interface ProgramNode extends ANode {
+    supports: string[] | null
 };
 
 const readFile = promisify(readFileAsync);
@@ -58,13 +65,88 @@ function parseProgramNode(raw: string): ProgramNode {
     };
 }
 
+function buildTree(nodeMap: NodeMap, rootNodeName: string): ProgramNodeTree {
+    const rootNode = nodeMap[rootNodeName];
+
+    if (rootNode.supports == null)
+        return {
+            value: rootNode,
+            children: null
+        };
+
+    const supports = rootNode.supports.map(n => buildTree(nodeMap, n));
+
+    return {
+        value: rootNode,
+        children: supports
+    };
+}
+
+// Unlike a pure map, the function passed as an argument receives the node value AND its children
+function mapTreeRecursive<N, T>(fn: (t: Tree<N>) => T, node: Tree<N>): Tree<T> {
+    if (node.children == null)
+        return {
+            value: fn(node),
+            children: null
+        };
+
+    return {
+        value: fn(node),
+        children: node.children.map(n => mapTreeRecursive(fn, n))
+    };
+}
+
+function evaluateNodeWeight(node: ProgramNodeTree): number {
+    if (node.children == null)
+        return node.value.weight;
+
+    return node.value.weight + node.children.map(evaluateNodeWeight).reduce(add);
+}
+
+function isNodeBalanced(node: Tree<[number, number]>): [boolean, number, number, number[]] {
+    const ownWeight = node.value[0];
+    const totalWeight = node.value[1];
+
+    if (node.children == null)
+        return [true, node.value[0], node.value[0], [null]];
+
+    return [uniq(node.children.map(n => n.value[1])).length == 1, ownWeight, totalWeight, node.children.map(n => n.value[1])];
+}
+
+function createWeightTree(node: ProgramNodeTree): Tree<[boolean, number, number, number[]]> {
+    function evalWeights(n: ProgramNodeTree): [number, number] {
+        return [n.value.weight, evaluateNodeWeight(n)];
+    };
+
+    return mapTreeRecursive(isNodeBalanced, mapTreeRecursive(evalWeights, node));
+}
+
+function partOne(input: ProgramNode[]): ProgramNode {
+    return topDownNodeElimination(input);
+}
+
+function partTwo(nodeMap: NodeMap, rootNode: ProgramNode) {
+    const weightTree = createWeightTree(buildTree(nodeMap, rootNode.name));
+
+    return inspect(weightTree, { depth: null });
+}
+
 async function main(): Promise<void> {
     const rawInput = await readFile('./input.txt', 'utf8');
-    const nodes = rawInput
+
+    const nodes: ProgramNode[] = rawInput
         .split('\n')
         .map(parseProgramNode);
 
-    console.log(topDownNodeElimination(nodes));
+    const nodeMap = nodes
+        .reduce((map, n) => ({ ...map, [n.name]: n }), {});
+
+    const rootNode = partOne(nodes);
+    console.log(rootNode); // Part 1
+
+    // I couldn't figure out what the problem was even asking for, so I just dumped a tree with some
+    // useful info and looked through it manually
+    console.log(partTwo(nodeMap, rootNode));
 }
 
 main();
