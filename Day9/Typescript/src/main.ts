@@ -22,13 +22,16 @@ function symbolLength(symbol: Value): number {
 }
 
 function countGarbage(value: Value): number {
+    let op;
+
     if (isGroup(value))
-        return value.contents.map(countGarbage).reduce(add, 0);
+        op = countGarbage;
+    else if (isGarbage(value))
+        op = symbolLength;
+    else
+        return 0;
 
-    if (isGarbage(value))
-        return value.contents.map(symbolLength).reduce(add, 0);
-
-    return 0;
+    return value.contents.map(op).reduce(add, 0);
 }
 
 function partOne(input: Group): number {
